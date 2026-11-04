@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Documents · Grounds AI{% endblock %}
+{% block content %}
+<section class="intro">
+  <h1>Document collection</h1>
+  <p>Upload text-based PDFs. Each one is split into passages and saved as embeddings on this computer.</p>
+</section>
+
+<form class="upload" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+  <input type="file" name="pdf" accept=".pdf,application/pdf" required>
+  <button type="submit">Upload</button>
+</form>
+
+{% if docs %}
+<table class="docs">
+  <thead><tr><th>File</th><th>Pages</th><th>Passages</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for doc in docs %}
+    <tr>
+      <td>{{ doc.filename }}</td>
+      <td>{{ doc.pages }}</td>
+      <td>{{ doc.passages }}</td>
+      <td><span class="status {{ doc.status }}">{{ doc.status }}</span>
+          {% if doc.message %}<div class="note">{{ doc.message }}</div>{% endif %}</td>
+      <td>
+        <form action="{{ url_for('delete', name=doc.filename) }}" method="post">
+          <button type="submit" class="secondary small">Delete</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">No documents yet.</p>
+{% endif %}
+{% endblock %}
