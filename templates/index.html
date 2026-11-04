@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Ask about spent coffee grounds</h1>
+  <p>Answers come from your local documents ({{ docs|selectattr('status', 'equalto', 'ready')|list|length }} ready)
+     using <code>{{ model }}</code> running on this computer.</p>
+</section>
+
+<div id="chat" class="chat" aria-live="polite">
+  <div class="msg assistant">Hi! Upload PDFs on the <a href="{{ url_for('documents') }}">Documents</a> page,
+    then ask me things like <em>"How can cafés reuse spent coffee grounds?"</em></div>
+</div>
+
+<form id="chat-form" class="chat-form">
+  <textarea id="question" rows="2" placeholder="Type your question and press Enter" required></textarea>
+  <div class="row">
+    <label class="toggle"><input type="checkbox" id="use-docs" checked> Use my documents</label>
+    <button type="button" id="clear" class="secondary">Clear chat</button>
+    <button type="submit" id="send">Send</button>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}
