@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local data (PDFs and the vector database stay on your own computer)
+uploads/
+*.pdf
+*.sqlite3
+
+# Other
+.env
+.DS_Store
