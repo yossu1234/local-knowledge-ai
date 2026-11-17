@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="page-{{ request.endpoint }}">
+  {% set nav = [('home', 'Home'), ('how', 'How it works'), ('chat', 'Ask'), ('compare', 'Compare'), ('documents', 'Library'), ('about', 'About')] %}
   <header class="topbar">
     <a class="brand" href="{{ url_for('home') }}" aria-label="Grounds AI home">
       <svg class="bean" viewBox="0 0 32 32" aria-hidden="true">
@@ -18,12 +19,16 @@
       </svg>
       <span class="word">GROUNDS<span class="ai">AI</span></span>
     </a>
-    <nav>
-      <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' }}">Chat</a>
-      <a href="{{ url_for('documents') }}" class="{{ 'active' if request.endpoint == 'documents' }}">Documents</a>
+    <nav aria-label="Main">
+      {% for endpoint, label in nav %}
+        <a href="{{ url_for(endpoint) }}" class="{{ 'active' if request.endpoint == endpoint }}">{{ label }}</a>
+      {% endfor %}
     </nav>
   </header>
-  <main class="container">
+
+  {% block hero %}{% endblock %}
+
+  <main class="container {% block container_class %}{% endblock %}">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
         <div class="flash {{ category }}">{{ message }}</div>
@@ -31,7 +36,20 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
-  <footer class="foot">Runs locally with Ollama · Answers cite file and page</footer>
+
+  <footer class="site-foot">
+    <div class="foot-inner">
+      <div>
+        <div class="foot-brand">GROUNDS <span>AI</span></div>
+        <p>Local knowledge on spent coffee grounds from Bangkok cafés. Runs on your own computer with Ollama.</p>
+      </div>
+      <div class="foot-links">
+        {% for endpoint, label in nav %}<a href="{{ url_for(endpoint) }}">{{ label }}</a>{% endfor %}
+        <a href="https://github.com/yossu1234/local-knowledge-ai">GitHub</a>
+      </div>
+    </div>
+    <div class="foot-note">Group PNE · BAScii Generative AI · Answers can contain mistakes, so check the cited page.</div>
+  </footer>
   {% block scripts %}{% endblock %}
 </body>
 </html>
