@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Compare · Grounds AI{% endblock %}
+{% block container_class %}wide{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="eyebrow">Compare</div>
+  <h1>Same question. With and without our papers.</h1>
+  <p>Ask once and see both answers side by side. This is how we test whether local knowledge makes the AI better.</p>
+</section>
+
+<div class="suggest" aria-label="Suggested questions">
+  {% for q in questions %}<button type="button" class="chip" data-q="{{ q }}">{{ q }}</button>{% endfor %}
+</div>
+
+<form id="compare-form" class="chat-form compare-form">
+  <textarea id="cq" rows="2" placeholder="Type a question to compare" required></textarea>
+  <div class="row"><span class="toggle">Both answers use <code>{{ model }}</code>. Only one sees our papers.</span><button type="submit" id="cbtn">Compare</button></div>
+</form>
+
+<div class="compare-grid">
+  <div class="cpanel good">
+    <div class="cp-head"><span class="cp-tag">With our papers</span><span class="cp-sub">Grounds AI</span></div>
+    <div class="cp-body" id="with"><p class="cp-empty">The answer from our research papers will appear here, with sources.</p></div>
+  </div>
+  <div class="cpanel bad">
+    <div class="cp-head"><span class="cp-tag">Without papers</span><span class="cp-sub">Model only</span></div>
+    <div class="cp-body" id="without"><p class="cp-empty">The answer from the model alone will appear here.</p></div>
+  </div>
+</div>
+<p class="note-line">Tip: look at whether each side names a real study and page you could check.</p>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='format.js') }}"></script>
+<script src="{{ url_for('static', filename='compare.js') }}"></script>
+{% endblock %}
