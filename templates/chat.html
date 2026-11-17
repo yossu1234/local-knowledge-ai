@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Ask · Grounds AI{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="eyebrow">Ask</div>
+  <h1>Ask about spent coffee grounds</h1>
+  <p>Answers come from {{ stats.docs }} research papers ({{ stats.passages }} passages) using <code>{{ model }}</code> on this computer.</p>
+</section>
+
+<div class="suggest" aria-label="Suggested questions">
+  {% for q in questions %}<button type="button" class="chip" data-q="{{ q }}">{{ q }}</button>{% endfor %}
+</div>
+
+<div id="chat" class="chat" aria-live="polite">
+  <div class="msg assistant">Hi! Ask me anything about reusing spent coffee grounds, or pick a question above. Each answer lists the paper and page it came from.</div>
+</div>
+
+<form id="chat-form" class="chat-form">
+  <textarea id="question" rows="2" placeholder="Type your question and press Enter" required></textarea>
+  <div class="row">
+    <label class="toggle"><input type="checkbox" id="use-docs" checked> Use my documents</label>
+    <button type="button" id="clear" class="secondary">Clear chat</button>
+    <button type="submit" id="send">Send</button>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='format.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}
