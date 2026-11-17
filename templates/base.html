@@ -4,11 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Grounds AI{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="{{ url_for('home') }}">☕ Grounds AI</a>
+    <a class="brand" href="{{ url_for('home') }}" aria-label="Grounds AI home">
+      <svg class="bean" viewBox="0 0 32 32" aria-hidden="true">
+        <ellipse cx="16" cy="16" rx="10" ry="14" transform="rotate(35 16 16)" fill="currentColor"/>
+        <path d="M10.5 6.5 C 18 12, 13 20, 21.5 25.5" stroke="#1f1611" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="word">GROUNDS<span class="ai">AI</span></span>
+    </a>
     <nav>
       <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' }}">Chat</a>
       <a href="{{ url_for('documents') }}" class="{{ 'active' if request.endpoint == 'documents' }}">Documents</a>
@@ -22,6 +31,7 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
+  <footer class="foot">Runs locally with Ollama · Answers cite file and page</footer>
   {% block scripts %}{% endblock %}
 </body>
 </html>
