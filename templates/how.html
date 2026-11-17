@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}How it works · Grounds AI{% endblock %}
+{% block container_class %}wide{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="eyebrow">How it works</div>
+  <h1>Retrieval-Augmented Generation, step by step</h1>
+  <p>Before the AI answers, Grounds AI searches our papers for the most relevant passages. The model then answers from those passages and lists them as sources.</p>
+</section>
+
+<section class="pipeline" aria-label="How a question is answered">
+  <div class="lane-label">Once, when a paper is added</div>
+  <div class="steps">
+    <div class="pstep"><div class="ps-n">1</div><h3>Upload</h3><p>A PDF is added on the Library page.</p></div>
+    <div class="parrow" aria-hidden="true"></div>
+    <div class="pstep"><div class="ps-n">2</div><h3>Split</h3><p>Each page is cut into {{ passage_words }}-word passages, with {{ overlap }} words shared between neighbours.</p></div>
+    <div class="parrow" aria-hidden="true"></div>
+    <div class="pstep"><div class="ps-n">3</div><h3>Embed</h3><p><code>{{ embed_model }}</code> turns each passage into a vector, saved in SQLite.</p></div>
+  </div>
+  <div class="lane-join" aria-hidden="true"><span>stored on this computer</span></div>
+  <div class="lane-label">Every time you ask</div>
+  <div class="steps">
+    <div class="pstep q"><div class="ps-n">4</div><h3>Search</h3><p>Your question becomes a vector. The {{ top_k }} closest passages are picked.</p></div>
+    <div class="parrow" aria-hidden="true"></div>
+    <div class="pstep q"><div class="ps-n">5</div><h3>Answer</h3><p><code>{{ model }}</code> answers using only those passages.</p></div>
+    <div class="parrow" aria-hidden="true"></div>
+    <div class="pstep q"><div class="ps-n">6</div><h3>Cite</h3><p>The file and page of each passage are shown under the answer.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="cards3">
+    <div class="ucard"><div class="u-tag">Private by design</div><p>Both AI models run through Ollama on this computer. Questions and papers never leave it.</p></div>
+    <div class="ucard"><div class="u-tag">Answers you can check</div><p>Every answer lists its sources, so you can open the paper and read the exact page.</p></div>
+    <div class="ucard"><div class="u-tag">Honest about limits</div><p>The small {{ model }} model can still mix up details. Always check the cited page.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="eyebrow">Built with</div><h2>Tech stack</h2></div>
+  <div class="stack">
+    <div class="stack-item"><strong>Ollama</strong><span>runs the AI models locally</span></div>
+    <div class="stack-item"><strong>{{ model }}</strong><span>writes the answers</span></div>
+    <div class="stack-item"><strong>{{ embed_model }}</strong><span>turns text into vectors</span></div>
+    <div class="stack-item"><strong>Flask</strong><span>the website and API</span></div>
+    <div class="stack-item"><strong>PyMuPDF</strong><span>reads text from PDFs</span></div>
+    <div class="stack-item"><strong>SQLite</strong><span>stores passages and vectors</span></div>
+  </div>
+</section>
+{% endblock %}
