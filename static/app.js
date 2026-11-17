@@ -20,12 +20,10 @@ function save() {
 function addBubble(role, text, sources) {
   const div = document.createElement("div");
   div.className = "msg " + role;
-  div.textContent = text;
-  if (sources && sources.length) {
-    const list = document.createElement("div");
-    list.className = "sources";
-    list.textContent = "Sources: " + sources.map(s => `${s.filename} (p. ${s.page})`).join(", ");
-    div.appendChild(list);
+  if (role.startsWith("assistant") && !role.includes("thinking")) {
+    div.innerHTML = formatAnswer(text) + sourcesHtml(sources);
+  } else {
+    div.textContent = text;
   }
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
@@ -43,7 +41,7 @@ async function send() {
   save();
 
   sendBtn.disabled = true;
-  const waiting = addBubble("assistant thinking", "Thinking…");
+  const waiting = addBubble("assistant thinking", "Searching the papers and writing an answer…");
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -76,4 +74,11 @@ document.getElementById("clear").addEventListener("click", () => {
   history = [];
   save();
   chat.querySelectorAll(".msg:not(:first-child)").forEach(el => el.remove());
+});
+document.querySelectorAll(".chip[data-q]").forEach(chip => {
+  chip.addEventListener("click", () => {
+    if (sendBtn.disabled) return;
+    input.value = chip.dataset.q;
+    send();
+  });
 });
