@@ -59,14 +59,27 @@ python app.py
 
 Open http://127.0.0.1:5000 in your browser.
 
+## Website pages
+
+| Page | Address | What it shows |
+|---|---|---|
+| Home | `/` | The problem, live stats, the coffee grounds journey and who it helps |
+| How it works | `/how-it-works` | A step-by-step diagram of how RAG answers a question, and the tech stack |
+| Ask | `/ask` | The chat, with suggested questions and source chips under each answer |
+| Compare | `/compare` | One question answered with and without our papers, side by side |
+| Library | `/documents` | The papers as cards, with pages, passages and status, plus upload |
+| About | `/about` | The team, objectives, limits and next steps |
+
 ## Project files
 
 | File | What it does |
 |---|---|
-| `app.py` | Flask server: PDF upload, passage splitting, embeddings, search and chat |
-| `templates/` | HTML pages (chat and documents) |
+| `app.py` | Flask server: pages, PDF upload, passage splitting, embeddings, search and chat API |
+| `templates/` | HTML pages (home, how, chat, compare, documents, about) sharing `base.html` |
+| `static/format.js` | Safely turns the model's Markdown (bold, lists) into HTML |
 | `static/app.js` | Chat page logic (sends messages, shows sources, keeps history in the browser) |
-| `static/style.css` | Page styles |
+| `static/compare.js` | Compare page logic (asks with and without documents) |
+| `static/style.css` | The Grounds AI theme: espresso, leather and copper |
 | `requirements.txt` | Python packages |
 
 ## Example questions
