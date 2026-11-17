@@ -181,14 +181,78 @@ def list_documents():
 # ---------------------------------------------------------------------------
 # Pages
 # ---------------------------------------------------------------------------
+# Friendly details for the papers we use. Other uploads still work and show their file name.
+PAPER_INFO = {
+    "biomass-05-00055.pdf": {
+        "title": "Sustainable Conversion of Spent Coffee Grounds into Energy Resources and Environmental Applications",
+        "authors": "Al Balushi et al.", "source": "Biomass", "year": "2025", "topic": "Energy and environment",
+        "url": "https://www.mdpi.com/2673-8783/5/3/55"},
+    "scg-energy-review.pdf": {
+        "title": "Sustainable Conversion of Spent Coffee Grounds into Energy Resources and Environmental Applications",
+        "authors": "Al Balushi et al.", "source": "Biomass", "year": "2025", "topic": "Energy and environment",
+        "url": "https://www.mdpi.com/2673-8783/5/3/55"},
+    "scg-antioxidants-mahidol.pdf": {
+        "title": "Antioxidant Compounds from Spent Coffee Grounds (SCGs)",
+        "authors": "Thuthaisong et al.", "source": "Mahidol University ENSD Conference", "year": "2025",
+        "topic": "Thai research", "url": "https://en.mahidol.ac.th/ensdp/"},
+    "coffee-body-scrub-study.pdf": {
+        "title": "Body Scrub with Virgin Coconut Oil, Coffee Grounds and Activated Carbon as a Moisturiser and Skin Brightener",
+        "authors": "Putri, Djamil and Faizatun", "source": "Scripta Medica", "year": "2021", "topic": "Products",
+        "url": "https://scindeks.ceon.rs/article.aspx?artid=2490-33292101076D"},
+}
+
+SUGGESTED_QUESTIONS = [
+    "Can spent coffee grounds be used in a body scrub? What did the study find?",
+    "What energy products can spent coffee grounds be turned into?",
+    "What antioxidant compounds are found in spent coffee grounds?",
+    "Why is putting spent coffee grounds in landfill a problem?",
+]
+
+
+def library_stats():
+    docs = list_documents()
+    ready = [d for d in docs if d["status"] == "ready"]
+    return {"docs": len(ready), "pages": sum(d["pages"] for d in ready),
+            "passages": sum(d["passages"] for d in ready)}
+
+
+@app.context_processor
+def shared_values():
+    return {"model": CHAT_MODEL, "embed_model": EMBED_MODEL}
+
+
 @app.get("/")
 def home():
-    return render_template("index.html", docs=list_documents(), model=CHAT_MODEL)
+    return render_template("home.html", stats=library_stats())
+
+
+@app.get("/how-it-works")
+def how():
+    return render_template("how.html", stats=library_stats(),
+                           passage_words=PASSAGE_WORDS, overlap=PASSAGE_OVERLAP, top_k=TOP_K)
+
+
+@app.get("/ask")
+def chat():
+    return render_template("chat.html", stats=library_stats(), questions=SUGGESTED_QUESTIONS)
+
+
+@app.get("/compare")
+def compare():
+    return render_template("compare.html", stats=library_stats(), questions=SUGGESTED_QUESTIONS)
 
 
 @app.get("/documents")
 def documents():
-    return render_template("documents.html", docs=list_documents())
+    docs = list_documents()
+    for d in docs:
+        d["info"] = PAPER_INFO.get(d["filename"])
+    return render_template("documents.html", docs=docs, stats=library_stats())
+
+
+@app.get("/about")
+def about():
+    return render_template("about.html", stats=library_stats())
 
 
 @app.post("/documents/upload")
