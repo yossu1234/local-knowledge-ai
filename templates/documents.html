@@ -1,37 +1,49 @@
 {% extends "base.html" %}
-{% block title %}Documents · Grounds AI{% endblock %}
+{% block title %}Library · Grounds AI{% endblock %}
+{% block container_class %}wide{% endblock %}
 {% block content %}
-<section class="intro">
-  <h1>Document collection</h1>
-  <p>Upload text-based PDFs. Each one is split into passages and saved as embeddings on this computer.</p>
+<section class="page-head">
+  <div class="eyebrow">Library</div>
+  <h1>Our knowledge base</h1>
+  <p>{{ stats.docs }} papers, {{ stats.pages }} pages and {{ stats.passages }} searchable passages, all stored on this computer.</p>
 </section>
 
-<form class="upload" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-  <input type="file" name="pdf" accept=".pdf,application/pdf" required>
-  <button type="submit">Upload</button>
-</form>
-
+{% set maxp = (docs | map(attribute='passages') | max) if docs else 1 %}
 {% if docs %}
-<table class="docs">
-  <thead><tr><th>File</th><th>Pages</th><th>Passages</th><th>Status</th><th></th></tr></thead>
-  <tbody>
+<div class="papers">
   {% for doc in docs %}
-    <tr>
-      <td>{{ doc.filename }}</td>
-      <td>{{ doc.pages }}</td>
-      <td>{{ doc.passages }}</td>
-      <td><span class="status {{ doc.status }}">{{ doc.status }}</span>
-          {% if doc.message %}<div class="note">{{ doc.message }}</div>{% endif %}</td>
-      <td>
-        <form action="{{ url_for('delete', name=doc.filename) }}" method="post">
-          <button type="submit" class="secondary small">Delete</button>
-        </form>
-      </td>
-    </tr>
+  <article class="paper">
+    <div class="paper-top">
+      <span class="ptag">{{ doc.info.topic if doc.info else 'Uploaded paper' }}</span>
+      <span class="status {{ doc.status }}">{{ doc.status }}</span>
+    </div>
+    <h3>{{ doc.info.title if doc.info else doc.filename }}</h3>
+    {% if doc.info %}<div class="pmeta">{{ doc.info.authors }} · {{ doc.info.source }} · {{ doc.info.year }}</div>{% endif %}
+    <div class="pfile">{{ doc.filename }}</div>
+    <div class="pbar" title="{{ doc.passages }} passages"><span style="width: {{ (100 * doc.passages / (maxp or 1)) | round | int }}%"></span></div>
+    <div class="pnums"><span><strong>{{ doc.pages }}</strong> pages</span><span><strong>{{ doc.passages }}</strong> passages</span></div>
+    {% if doc.message %}<div class="note">{{ doc.message }}</div>{% endif %}
+    <div class="pactions">
+      {% if doc.info %}<a href="{{ doc.info.url }}" target="_blank" rel="noopener">View source</a>{% endif %}
+      <form action="{{ url_for('delete', name=doc.filename) }}" method="post">
+        <button type="submit" class="secondary small">Delete</button>
+      </form>
+    </div>
+  </article>
   {% endfor %}
-  </tbody>
-</table>
+</div>
 {% else %}
-<p class="empty">No documents yet.</p>
+<p class="empty">No papers yet. Upload your first PDF below.</p>
 {% endif %}
+
+<section class="upload-box">
+  <div>
+    <h2>Add a paper</h2>
+    <p>Upload a text-based PDF. It is split into passages and indexed in under a minute.</p>
+  </div>
+  <form class="upload" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="pdf" accept=".pdf,application/pdf" required>
+    <button type="submit">Upload</button>
+  </form>
+</section>
 {% endblock %}
