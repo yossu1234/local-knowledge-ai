@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}About · Grounds AI{% endblock %}
+{% block container_class %}wide{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="eyebrow">About</div>
+  <h1>A Gen AI project by Group PNE</h1>
+  <p>Grounds AI is our final project for BAScii Generative AI. We wanted to see if giving an AI our own local documents makes its answers more accurate and more useful.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="eyebrow">The team</div><h2>Group PNE</h2></div>
+  <div class="team">
+    <div class="member"><div class="avatar">Y</div><strong>Yosapat Suttirattanapan</strong></div>
+    <div class="member"><div class="avatar">P</div><strong>Pholaphat Atchararuji</strong></div>
+    <div class="member"><div class="avatar">P</div><strong>Pasawich Meemanee</strong></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div class="eyebrow">Objectives</div><h2>What we set out to do</h2></div>
+  <div class="objectives">
+    <div class="obj done"><span class="o-s">Achieved</span><h3>Build a local AI app</h3><p>Runs on our own computer with Ollama, Flask and SQLite.</p></div>
+    <div class="obj done"><span class="o-s">Achieved</span><h3>Create a knowledge base</h3><p>{{ stats.docs }} papers, {{ stats.passages }} passages on energy, antioxidants and skincare.</p></div>
+    <div class="obj part"><span class="o-s">Partly</span><h3>Answer with sources</h3><p>Every answer lists file and page, but the small model can still mix up details.</p></div>
+    <div class="obj done"><span class="o-s">Achieved</span><h3>Test local knowledge</h3><p>The Compare page shows answers with and without our papers.</p></div>
+  </div>
+</section>
+
+<section class="section two-col">
+  <div class="ucard">
+    <div class="u-tag">Limits</div>
+    <ul class="plain">
+      <li>The 1B model is small and can get details wrong.</li>
+      <li>It does not always admit when the papers do not cover a question.</li>
+      <li>Only three papers so far, all in English.</li>
+    </ul>
+  </div>
+  <div class="ucard">
+    <div class="u-tag">Next steps</div>
+    <ul class="plain">
+      <li>Try a larger local model and compare accuracy.</li>
+      <li>Add Thai papers and data from real Bangkok cafés.</li>
+      <li>Build a scored test set of 20 or more questions.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div><h2>Open source</h2><p>All our code is public. Install it and run it on your own computer.</p></div>
+  <div class="hero-cta"><a class="btn" href="https://github.com/yossu1234/local-knowledge-ai">View on GitHub</a></div>
+</section>
+{% endblock %}
